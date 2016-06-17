@@ -1,9 +1,8 @@
 # ![Strider][logo]
 
-[![NPM][npm-badge-img]][npm-badge-link]  
-[![Code Climate][cc-badge]][cc-badge-link] [![Dependency Status][david-badge]][david-badge-link]
----
+[![NPM][npm-badge-img]][npm-badge-link] [![Code Climate][cc-badge]][cc-badge-link] [![Dependency Status][david-badge]][david-badge-link] [![Build Status][travis-badge]][travis-badge-link]
 
+---
 
 ### Brilliant Continuous Deployment
 
@@ -27,8 +26,6 @@ Strider is extremely customizable through plugins. Plugins can
 - create or modify user interfaces within Strider.
 - so much more! just use your imagination!
 
-For more details check out the [introductory chapter of the Strider Book][book-intro]
-
 ## README Contents
 
 - [General requirements](#general-requirements)
@@ -39,18 +36,22 @@ For more details check out the [introductory chapter of the Strider Book][book-i
     - [Heroku](#strider-on-heroku)
     - [Docker](#strider-in-docker)
 - [Advanced Topics](#advanced-topics)
+- [API Documentation](#api-documentation)
+- [Resources](#resources)
+    - [Strider Tutorial Series][resource-strider-futurestudio-tutorials]
 - [Support & Help](#support--help)
-- [Roadmap / Changelog][roadmap]
+- [Changelog][changelog]
 
 ## General Requirements
 
-- [nodejs] >= v0.8
-- [npm] >= 2.0 (preferred)
-- [git] >= 1.7.10
+- [nodejs] >= 0.10
+- [npm] >= 2.0 < 3
+- [git] >= 2.0
 - [mongodb][mongo-download] (local or remote)
 - [node-gyp]
 
 _Note: Installing on OS X might require XCode to be installed._
+_Note: We are currently not having great success with Strider + npm3, please use npm2._
 
 
 ## Running on Infrastructure
@@ -74,14 +75,17 @@ npm install
 values should work fine for running on localhost, however for an
 Internet-accessible deployment the following variables will need to be exported:
 
-  - `SERVER_NAME` - Required; Address at which server will be accessible on the Internet. E.g. `https://strider.example.com` (note: no trailing slash)
+  - `SERVER_NAME` - **Required**; Address at which server will be accessible on the Internet. E.g. `https://strider.example.com` (note: no trailing slash, and included protocol)
   - `HOST` - Host where strider listens, optional (defaults to 0.0.0.0).
   - `PORT` - Port that strider runs on, optional (defaults to 3000).
+  - `CONCURRENT_JOBS` - How many jobs to run concurrently (defaults to 1). Concurrency only works across different project and branch combinations. So if two jobs come in for the same project and branch, concurrency will always be 1.
+  - `STRIDER_CLONE_DEST` - Where the repositories are cloned to (defaults to ~/.strider)
   - `DB_URI` - MongoDB DB URI if not localhost (you can safely use [MongoLab free plan][mongolab] - works great)
- 
+  - `HTTP_PROXY` - Proxy support, optional (defaults to null)
   - If you want email notifications, configure an SMTP server (we recommend [Mailgun] for SMTP if you need a server - free account gives 200 emails / day):
     - `SMTP_HOST` - SMTP server hostname e.g. smtp.example.com
     - `SMTP_PORT` - SMTP server port e.g. 587 (default)
+    - `SMTP_SECURE` - SMTP server TLS or SSL ("true" or "false")
     - `SMTP_USER` - SMTP auth username e.g. "myuser"
     - `SMTP_PASS` - SMTP auth password e.g. "supersecret"
     - `SMTP_FROM` - Default FROM address e.g. "Strider <noreply@stridercd.com>" (default)
@@ -151,6 +155,7 @@ Please post related issues in the [issues section](https://github.com/Strider-CD
 
 ## Resources
 
+- [Strider Tutorial Series][resource-strider-futurestudio-tutorials] - Extensive guides about Strider covering platform setup, 3rd party integrations (GitHub, GitLab, etc), continuous deployments (Heroku, SSH), notifications (email, Slack, HipChat), how to create your own Strider plugin and many more.
 - [Strider on DigitalOcean][resource-digitalocean] - Covers setting up an Ubuntu machine with Strider using upstart.
 - [Strider plugin template][resource-plugin-template] - Simple setup for getting started with your own plugin.
 - [Panamax Strider template][resource-panamax-template] - Strider template for use with Panamax.
@@ -164,22 +169,24 @@ subset of what's covered:
 - [Requiring Strider](https://github.com/Strider-CD/strider/wiki/Requiring-Strider)
 - [Managing Plugins](https://github.com/Strider-CD/strider/wiki/Managing-Plugins)
 
+## API Documentation
+
+An effort has been started to document the existing REST API, and to have versioned documentation going forward.
+We use [apiDoc] for the documentation.
+
+To build the documentation run `npm run gendocs` and the documentation will be accessable from `apidocs/index.html`.
+
 ## Support & Help
 
 We are very responsive to Github Issues - please think of them as a message board for the project!
 
 ### IRC Channel
 
-You can find us on irc.freenode.net in #strider
+You can find us on [irc.freenode.net in #strider][irc].
 
 If nobody is responding, don't leave immediately. Someone will eventually respond. If you don't want to wait please create a Github issue! Many Strider contributors don't use IRC at all, but will respond pretty quickly to new Github Issues.
 
-### Commercial Support
-
-Strider is maintained and supported by [FrozenRidge,
-LLC][maintainer]. For commercial support, customization, integration
-& hosting enquiries please email hi@frozenridge.co.
-
+For a view of what's going on with the project, check out our boards by setting up [ZenBoard] and visiting the "Boards" page.
 
 [logo]: https://raw.github.com/Strider-CD/strider/master/public/images/top_github.png
 [build-img]: http://public-ci.stridercd.com/Strider-CD/strider/badge
@@ -188,14 +195,14 @@ LLC][maintainer]. For commercial support, customization, integration
 [dep-link]: https://david-dm.org/Strider-CD/strider
 [dev-dep-img]: https://david-dm.org/Strider-CD/strider/dev-status.svg
 [dev-dep-link]: https://david-dm.org/Strider-CD/strider#info=devDependencies
-[npm-badge-img]: https://nodei.co/npm/strider.svg?downloads=true&stars=true
-[npm-badge-link]: https://nodei.co/npm/strider/
+[npm-badge-img]: https://badge.fury.io/js/strider.svg
+[npm-badge-link]: http://badge.fury.io/js/strider
 [screenshot]: /docs/screenshots/dashboard.jpg?raw=true
 [more-screenshots]: https://github.com/Strider-CD/strider/wiki/Screenshots
 [mongolab]: https://mongolab.com/plans/pricing/
 [mailgun]: http://www.mailgun.com/pricing
 [book-intro]: http://strider.readthedocs.org/en/latest/intro.html
-[roadmap]: https://github.com/Strider-CD/strider/blob/master/ROADMAP.md
+[changelog]: https://github.com/Strider-CD/strider/blob/master/CHANGELOG.md
 [mongo-download]: http://www.mongodb.org/downloads
 [resource-digitalocean]: http://fosterelli.co/creating-a-private-ci-with-strider.html
 [resource-plugin-template]: https://github.com/bitwit/strider-template
@@ -216,3 +223,9 @@ LLC][maintainer]. For commercial support, customization, integration
 [git]: http://git-scm.com/
 [nodejs]: http://nodejs.org/
 [npm]: https://docs.npmjs.com/getting-started/installing-node
+[ZenBoard]: https://www.zenhub.io/
+[irc]: https://www.irccloud.com/#!/ircs://irc.freenode.net:6697/%23strider
+[travis-badge]: https://travis-ci.org/Strider-CD/strider.svg
+[travis-badge-link]: https://travis-ci.org/Strider-CD/strider
+[apiDoc]: http://apidocjs.com/#getting-started
+[resource-strider-futurestudio-tutorials]: https://futurestud.io/blog/strider-getting-started-platform-overview/

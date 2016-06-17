@@ -173,8 +173,11 @@ module.exports = function ($scope, $route, $location, $filter) {
       status: 'submitted'
     };
   };
+  $scope.restartJob = function (job) {
+    socket.emit('restart', job);
+  };
   $scope.cancelJob = function (id) {
-    socket.emit('cancel', id)
+    socket.emit('cancel', id);
   };
 };
 

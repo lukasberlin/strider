@@ -20,16 +20,21 @@
   margin-bottom: 5px;
 
   .progress-meter {
-    min-width: 200px;
+    min-width: 50px;
   }
 
-  table {
-    margin-bottom: 0;
-    width: 100%;
+  .job-link-id {
+    padding: 0 5px;
+    vertical-align: super;
+  }
 
-    .committer img {
-      margin-top: -8px;
-      max-width: inherit;
+  .committer img {
+    max-width: 30px;
+  }
+
+  .current-build-menu {
+    .dropdown-menu {
+      top: 28px;
     }
   }
 }
@@ -83,7 +88,6 @@ body.job_view .body-content {
 }
 
 .console-output {
-  max-height: 600px;
   overflow-y: auto;
   overflow-x: visible; 
   border-top-left-radius: 5px;
